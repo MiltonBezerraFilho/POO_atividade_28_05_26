@@ -1,0 +1,3 @@
+/home/mf/Documentos/atividades cdia/POO_atividade_28_05_26/meu-projeto/build/CMakeFiles/meu_projeto.dir
+/home/mf/Documentos/atividades cdia/POO_atividade_28_05_26/meu-projeto/build/CMakeFiles/edit_cache.dir
+/home/mf/Documentos/atividades cdia/POO_atividade_28_05_26/meu-projeto/build/CMakeFiles/rebuild_cache.dir
