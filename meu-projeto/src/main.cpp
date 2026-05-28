@@ -84,7 +84,7 @@ public:
     }
 };
 
-// Programa de teste
+// Programa de testes
 int main() {
     std::cout << "--- TESTE ---\n\n";
 
