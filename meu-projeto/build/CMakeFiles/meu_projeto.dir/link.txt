@@ -1,1 +1,1 @@
-/usr/bin/c++ CMakeFiles/meu_projeto.dir/src/main.cpp.o -o meu_projeto 
+/usr/bin/c++ -g CMakeFiles/meu_projeto.dir/src/main.cpp.o -o meu_projeto 
