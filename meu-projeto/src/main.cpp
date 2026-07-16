@@ -1,8 +1,11 @@
 #include <iostream>
 #include <string>
 #include <memory>
+#include <vector>
+#include <stdexcept> 
+#include <fstream>   // Para gravação do relatório
 
-// 1. CLASSE PILOT (Agregação - Personagem Base)
+// Pilot - agregado à aeronave
 class Pilot {
 private:
     std::string callsign_;
@@ -23,15 +26,24 @@ public:
     int get_hp() const { return hp_; }
     int get_agility() const { return agility_; }
 
-    // Lógica real: Modifica a vida com base no dano recebido
     void take_damage(int amount) {
+        if (amount < 0) {
+            throw std::invalid_argument("Valor de dano invalido.");
+        }
         hp_ -= amount;
         if (hp_ < 0) hp_ = 0;
         std::cout << "[PILOT] Dano recebido: " << amount << " | HP atual: " << hp_ << "\n";
     }
+
+    friend std::ostream& operator<<(std::ostream& os, const Pilot& pilot) {
+        os << "[PILOT] Callsign: " << pilot.callsign_ 
+           << " | HP: " << pilot.hp_ 
+           << " | Agilidade: " << pilot.agility_;
+        return os;
+    }
 };
 
-// 2. CLASSE AMMUNITION (Composição - A "Mana/Stamina" do RPG)
+// Ammunition - composta na aeronave
 class Ammunition {
 private:
     int count_;
@@ -44,17 +56,15 @@ public:
 
     int get_count() const { return count_; }
 
-    // Lógica real: Consome o recurso se houver quantidade suficiente
-    bool consume(int quantity) {
-        if (count_ >= quantity) {
-            count_ -= quantity;
-            return true;
+    void consume(int quantity) {
+        if (count_ < quantity) {
+            throw std::runtime_error("Municao insuficiente.");
         }
-        return false;
+        count_ -= quantity;
     }
 };
 
-// 3. CLASSE WEAPON (Composição - Armamento/Habilidade)
+// Weapon - composta na aeronave
 class Weapon {
 private:
     std::string name_;
@@ -67,86 +77,159 @@ public:
     }
 
     std::string get_name() const { return name_; }
-
-    // Lógica real: Calcula o dano final baseado na agilidade do piloto
-    int calculate_strike(int pilot_agility) const {
-        return damage_ + (pilot_agility * 2);
-    }
+    int get_damage() const { return damage_; }
 };
 
-// 4. CLASSE FIGHTERJET (Composição Dupla e Controladora - A Classe do RPG)
-class FighterJet {
-private:
+// Classe base abstrata
+class Aircraft {
+protected:
     std::string model_;
-    int defense_;
+    int speed_;         
+    int evasiveness_;   
     std::unique_ptr<Ammunition> ammo_;
     std::unique_ptr<Weapon> weapon_;
-    Pilot* pilot_; // Ponteiro bruto observador para agregação
+    Pilot* pilot_;
 
 public:
-    FighterJet(std::string model, int defense, int initial_ammo, std::string weapon_name, int weapon_dmg)
+    Aircraft(std::string model, int speed, int evasiveness, int initial_ammo, std::string weapon_name, int weapon_dmg)
         : model_(model),
-          defense_(defense),
+          speed_(speed),
+          evasiveness_(evasiveness),
           ammo_(std::make_unique<Ammunition>(initial_ammo)),
           weapon_(std::make_unique<Weapon>(weapon_name, weapon_dmg)),
-          pilot_(nullptr) {
-        std::cout << "[FIGHTERJET] Objeto criado: " << model_ << "\n";
+          pilot_(nullptr) {}
+
+    virtual ~Aircraft() {
+        std::cout << "[AIRCRAFT] Destruido: " << model_ << "\n";
     }
 
-    ~FighterJet() {
-        std::cout << "[FIGHTERJET] Objeto destruido: " << model_ << "\n";
+    void assign_pilot(Pilot* p) { pilot_ = p; }
+
+    std::string get_model() const { return model_; }
+    int get_ammo_count() const { return ammo_->get_count(); }
+
+    void fire_weapon(int rounds) {
+        std::cout << "[AIRCRAFT] Disparando " << rounds << " tiro(s)...\n";
+        ammo_->consume(rounds); 
+        std::cout << "[AIRCRAFT] Disparo efetuado. Municao restante: " << ammo_->get_count() << "\n";
     }
 
-    void assign_pilot(Pilot* p) {
-        pilot_ = p;
-    }
+    virtual float calculate_firepower() const = 0;
 
-    // Lógica real: Orquestra o ataque consumindo munição e calculando o dano
-    void fire_at_target() {
-        std::cout << "[FIGHTERJET] Metodo fire_at_target() executado\n";
-        if (!pilot_) {
-            std::cout << "[ERRO] Ponteiro pilot_ nulo\n";
-            return;
+    virtual void display_status() const {
+        std::cout << "[STATUS] Modelo: " << model_ << " | Vel: " << speed_ << " | Eva: " << evasiveness_;
+        if (pilot_) {
+            std::cout << " | Piloto: " << pilot_->get_callsign();
         }
-
-        if (ammo_->consume(1)) {
-            int total_damage = weapon_->calculate_strike(pilot_->get_agility());
-            std::cout << "[ATAQUE] Piloto: " << pilot_->get_callsign() << " | Modelo: " << model_ 
-                      << " | Arma: " << weapon_->get_name() << "\n"
-                      << " > Dano calculado: " << total_damage << " \n"
-                      << " > Municao restante: " << ammo_->get_count() << "\n";
-        } else {
-            std::cout << "[FALHA] Municao insuficiente para o disparo\n";
-        }
+        std::cout << "\n";
     }
 };
 
-// ROTEIRO DE TESTES MANUAIS
-int main() {
-    std::cout << "--- INICIO DA EXECUCAO ---\n\n";
+// FighterJet - caça padrão
+class FighterJet : public Aircraft {
+public:
+    FighterJet(std::string model, int speed, int evasiveness, int initial_ammo, std::string weapon_name, int weapon_dmg)
+        : Aircraft(model, speed, evasiveness, initial_ammo, weapon_name, weapon_dmg) {
+        std::cout << "[FIGHTERJET] Criado: " << model_ << "\n";
+    }
 
-    // Instanciando o Piloto fora do escopo (Agregação)
+    ~FighterJet() override {
+        std::cout << "[FIGHTERJET] Destruido\n";
+    }
+
+    float calculate_firepower() const override {
+        if (!pilot_) return 0.0f;
+        return weapon_->get_damage() + (pilot_->get_agility() * 1.5f) + (evasiveness_ * 1.2f);
+    }
+};
+
+// Interceptor - veloz e pesado
+class Interceptor : public Aircraft {
+public:
+    Interceptor(std::string model, int speed, int evasiveness, int initial_ammo, std::string weapon_name, int weapon_dmg)
+        : Aircraft(model, speed, evasiveness, initial_ammo, weapon_name, weapon_dmg) {
+        std::cout << "[INTERCEPTOR] Criado: " << model_ << "\n";
+    }
+
+    ~Interceptor() override {
+        std::cout << "[INTERCEPTOR] Destruido\n";
+    }
+
+    float calculate_firepower() const override {
+        if (!pilot_) return 0.0f;
+        return weapon_->get_damage() + pilot_->get_agility() + (speed_ * 2.5f);
+    }
+
+    void display_status() const override {
+        Aircraft::display_status(); 
+        std::cout << " > Tipo: Interceptor\n";
+    }
+};
+
+// Salva relatório em arquivo
+void salvar_relatorio(const std::string& filename, const std::vector<std::unique_ptr<Aircraft>>& frota, const Pilot& pilot) {
+    std::ofstream arquivo(filename);
+
+    if (!arquivo.is_open()) {
+        throw std::runtime_error("Erro ao criar arquivo de relatorio.");
+    }
+
+    arquivo << "----------------------------------------\n";
+    arquivo << "        Relatorio de Missao\n";
+    arquivo << "----------------------------------------\n\n";
+
+    arquivo << "Dados do piloto:\n";
+    arquivo << pilot << "\n\n";
+
+    arquivo << "Frota:\n";
+    for (const auto& aeronave : frota) {
+        arquivo << "- Modelo: " << aeronave->get_model() << "\n"
+                << "  Poder de fogo: " << aeronave->calculate_firepower() << "\n"
+                << "  Municao restante: " << aeronave->get_ammo_count() << "\n\n";
+    }
+
+    arquivo << "----------------------------------------\n";
+    arquivo.close();
+    std::cout << "[RELATORIO] Arquivo salvo: " << filename << "\n";
+}
+
+// Testes Q1 a Q4
+int main() {
+    std::cout << "--- INICIO DA EXECUCAO (Q1 a Q4) ---\n\n";
+
     Pilot* player_pilot = new Pilot("Wormwood", 100, 15);
 
-    // Bloco de escopo fechado para provar os tempos de vida (Testes 5 e 6 do edital)
     {
-        std::cout << "\n[ENTRANDO NO BLOCO DE ESCOPO]\n";
-        
-        FighterJet my_jet("MiG-21 Fishbed", 12, 2, "R-60 Missile", 40);
-        my_jet.assign_pilot(player_pilot);
-        
-        my_jet.fire_at_target();
-        my_jet.fire_at_target();
+        std::cout << "\n[ENTRANDO NO ESCOPO]\n";
+        std::vector<std::unique_ptr<Aircraft>> frota;
+        frota.push_back(std::make_unique<FighterJet>("F-22 Raptor", 75, 80, 4, "AIM-120", 45));
+        frota.push_back(std::make_unique<Interceptor>("MiG-31 Foxhound", 110, 15, 6, "R-37", 60));
 
-        std::cout << "[SAINDO DO BLOCO DE ESCOPO]\n";
-    } // O caça morre aqui. Arma e Munição somem. O piloto sobrevive.
+        for (const auto& aeronave : frota) {
+            aeronave->assign_pilot(player_pilot);
+        }
 
-    std::cout << "\n[FORA DO BLOCO DE ESCOPO]\n";
-    std::cout << "Verificando integridade do ponteiro pilot_: " << player_pilot->get_callsign() << "\n";
-    
-    // Testando método lógico no objeto sobrevivente para validar a agregação
-    player_pilot->take_damage(25);
+        // Simulando combate
+        try {
+            std::cout << "[SIMULACAO] Disparando armas do F-22...\n";
+            frota.front()->fire_weapon(2); 
+            player_pilot->take_damage(20);
+        } 
+        catch (const std::exception& e) {
+            std::cerr << "Excecao capturada: " << e.what() << "\n";
+        }
 
+        try {
+            salvar_relatorio("log_combate.txt", frota, *player_pilot);
+        }
+        catch (const std::runtime_error& e) {
+            std::cerr << e.what() << "\n";
+        }
+
+        std::cout << "\n[SAINDO DO ESCOPO]\n";
+    } 
+
+    std::cout << "\n[FORA DO ESCOPO]\n";
     delete player_pilot;
 
     std::cout << "\n--- FIM DA EXECUCAO ---\n";
