@@ -3,7 +3,8 @@
 
 # Descrição do Domínio Escolhido:
 
-Este projeto implementa a arquitetura base para um sistema de combates em turnos no estilo RPG. O sistema utiliza a classe FighterJet como a definição de atributos e classe do personagem, enquanto o Pilot funciona como o personagem base com dados de integridade física. O modelo de armamento (Weapon) define o multiplicador de dano das habilidades executadas, e o gerenciamento de recursos/stamina é controlado pelo módulo interno de munição (Ammunition).
+Este projeto implementa um sistema de simulação de combate aéreo RPG baseado na classe abstrata Aircraft, que define o cálculo de poder de fogo. Munição e armas são gerenciadas por composição com std::unique_ptr, garantindo liberação automática. O piloto é associado por agregação. Inclui tratamento de exceções para falhas como falta de munição, sobrecarga de operadores para relatórios e persistência em arquivo via std::ofstream.
+
 
 ```mermaid
 classDiagram
@@ -11,45 +12,32 @@ classDiagram
         -string callsign_
         -int hp_
         -int agility_
-        +Pilot(string callsign, int hp, int agility)
-        +~Pilot()
-        +get_callsign() string const
-        +get_hp() int const
-        +get_agility() int const
-        +take_damage(int amount) void
+        +take_damage(int amount)
+        +operator<<(ostream& os, const Pilot& pilot)
     }
 
-    class Ammunition {
-        -int count_
-        +Ammunition(int count)
-        +~Ammunition()
-        +get_count() int const
-        +consume(int quantity) bool
-    }
-
-    class Weapon {
-        -string name_
-        -int damage_
-        +Weapon(string name, int damage)
-        +~Weapon()
-        +get_name() string const
-        +calculate_strike(int pilot_agility) int const
+    class Aircraft {
+        <<abstract>>
+        #unique_ptr~Ammunition~ ammo_
+        #unique_ptr~Weapon~ weapon_
+        #Pilot* pilot_
+        +fire_weapon(int rounds)
+        +calculate_firepower() float*
+        +display_status() void
     }
 
     class FighterJet {
-        -string model_
-        -int defense_
-        -unique_ptr~Ammunition~ ammo_
-        -unique_ptr~Weapon~ weapon_
-        -Pilot* pilot_
-        +FighterJet(string model, int defense, int initial_ammo, string weapon_name, int weapon_dmg)
-        +~FighterJet()
-        +assign_pilot(Pilot* p) void
-        +fire_at_target() void
+        +calculate_firepower() float
     }
 
-    %% Relações do sistema baseado no ciclo de vida (Composição e Agregação)
-    FighterJet "1" *-- "1" Ammunition : possui (Composição)
-    FighterJet "1" *-- "1" Weapon : possui (Composição)
-    FighterJet "1" --> "0..1" Pilot : usa (Agregação)
+    class Interceptor {
+        +calculate_firepower() float
+        +display_status() void
+    }
+
+    Aircraft <|-- FighterJet : herda
+    Aircraft <|-- Interceptor : herda
+    Aircraft "1" *-- "1" Ammunition : composta
+    Aircraft "1" *-- "1" Weapon : composta
+    Aircraft "0..*" o-- "0..1" Pilot : agrega
 ```
