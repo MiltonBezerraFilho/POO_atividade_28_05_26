@@ -122,7 +122,7 @@ CMAKE_PROJECT_DESCRIPTION:STATIC=
 CMAKE_PROJECT_HOMEPAGE_URL:STATIC=
 
 //Value Computed by CMake
-CMAKE_PROJECT_NAME:STATIC=EcommerceSystem
+CMAKE_PROJECT_NAME:STATIC=RpgAviacao
 
 //Path to a program.
 CMAKE_RANLIB:FILEPATH=/usr/bin/ranlib
@@ -197,6 +197,15 @@ EcommerceSystem_IS_TOP_LEVEL:STATIC=ON
 
 //Value Computed by CMake
 EcommerceSystem_SOURCE_DIR:STATIC=/home/mf/Documentos/atividades cdia/POO_atividade_28_05_26/meu-projeto
+
+//Value Computed by CMake
+RpgAviacao_BINARY_DIR:STATIC=/home/mf/Documentos/atividades cdia/POO_atividade_28_05_26/meu-projeto/build
+
+//Value Computed by CMake
+RpgAviacao_IS_TOP_LEVEL:STATIC=ON
+
+//Value Computed by CMake
+RpgAviacao_SOURCE_DIR:STATIC=/home/mf/Documentos/atividades cdia/POO_atividade_28_05_26/meu-projeto
 
 
 ########################

@@ -117,24 +117,24 @@ depend:
 .PHONY : depend
 
 #=============================================================================
-# Target rules for targets named meu_projeto
+# Target rules for targets named meu_exe
 
 # Build rule for target.
-meu_projeto: cmake_check_build_system
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 meu_projeto
-.PHONY : meu_projeto
+meu_exe: cmake_check_build_system
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 meu_exe
+.PHONY : meu_exe
 
 # fast build rule for target.
-meu_projeto/fast:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/meu_projeto.dir/build.make CMakeFiles/meu_projeto.dir/build
-.PHONY : meu_projeto/fast
+meu_exe/fast:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/meu_exe.dir/build.make CMakeFiles/meu_exe.dir/build
+.PHONY : meu_exe/fast
 
 src/main.o: src/main.cpp.o
 .PHONY : src/main.o
 
 # target to build an object file
 src/main.cpp.o:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/meu_projeto.dir/build.make CMakeFiles/meu_projeto.dir/src/main.cpp.o
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/meu_exe.dir/build.make CMakeFiles/meu_exe.dir/src/main.cpp.o
 .PHONY : src/main.cpp.o
 
 src/main.i: src/main.cpp.i
@@ -142,7 +142,7 @@ src/main.i: src/main.cpp.i
 
 # target to preprocess a source file
 src/main.cpp.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/meu_projeto.dir/build.make CMakeFiles/meu_projeto.dir/src/main.cpp.i
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/meu_exe.dir/build.make CMakeFiles/meu_exe.dir/src/main.cpp.i
 .PHONY : src/main.cpp.i
 
 src/main.s: src/main.cpp.s
@@ -150,7 +150,7 @@ src/main.s: src/main.cpp.s
 
 # target to generate assembly for a file
 src/main.cpp.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/meu_projeto.dir/build.make CMakeFiles/meu_projeto.dir/src/main.cpp.s
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/meu_exe.dir/build.make CMakeFiles/meu_exe.dir/src/main.cpp.s
 .PHONY : src/main.cpp.s
 
 # Help Target
@@ -161,7 +161,7 @@ help:
 	@echo "... depend"
 	@echo "... edit_cache"
 	@echo "... rebuild_cache"
-	@echo "... meu_projeto"
+	@echo "... meu_exe"
 	@echo "... src/main.o"
 	@echo "... src/main.i"
 	@echo "... src/main.s"

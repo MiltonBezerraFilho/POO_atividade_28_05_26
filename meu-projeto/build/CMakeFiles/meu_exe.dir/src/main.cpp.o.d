@@ -1,4 +1,4 @@
-CMakeFiles/meu_projeto.dir/src/main.cpp.o: \
+CMakeFiles/meu_exe.dir/src/main.cpp.o: \
  /home/mf/Documentos/atividades\ cdia/POO_atividade_28_05_26/meu-projeto/src/main.cpp \
  /usr/include/stdc-predef.h /usr/include/c++/13/iostream \
  /usr/include/c++/13/bits/requires_hosted.h \

@@ -1,12 +1,14 @@
-cmake_minimum_required(VERSION 3.15)
-project(EcommerceSystem LANGUAGES CXX)
+cmake_minimum_required(VERSION 3.10)
+project(RpgAviacao CXX)
 
-#Para usar C++17
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
-#Ativar avisos rigorosos 
 add_compile_options(-Wall -Wextra)
 
-#Sinaliza o local do código principal
-add_executable(meu_projeto src/main.cpp)
+if(CMAKE_BUILD_TYPE STREQUAL "Debug")
+    add_compile_options(-fsanitize=address,undefined)
+    add_link_options(-fsanitize=address,undefined)
+endif()
+
+add_executable(meu_exe src/main.cpp)
