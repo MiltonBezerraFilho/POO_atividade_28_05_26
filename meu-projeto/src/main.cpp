@@ -5,6 +5,28 @@
 #include <stdexcept> 
 #include <fstream>   // Para gravação do relatório
 #include <ranges>
+#include <optional>
+#include <variant>
+
+// erro_dominio - excecao BASE do dominio, herda de std::runtime_error (Questao 2-A)
+class erro_dominio : public std::runtime_error {
+public:
+    using std::runtime_error::runtime_error; // herda o construtor da classe mae
+};
+
+// municao_insuficiente - excecao ESPECIFICA: falta de municao ao disparar
+class municao_insuficiente : public erro_dominio {
+public:
+    explicit municao_insuficiente(const std::string& msg)
+        : erro_dominio{"municao insuficiente: " + msg} {}
+};
+
+// dano_invalido - excecao ESPECIFICA: valor de dano negativo
+class dano_invalido : public erro_dominio {
+public:
+    explicit dano_invalido(const std::string& msg)
+        : erro_dominio{"dano invalido: " + msg} {}
+};
 
 // Pilot - agregado à aeronave
 class Pilot {
@@ -29,7 +51,7 @@ public:
 
     void take_damage(int amount) {
         if (amount < 0) {
-            throw std::invalid_argument("Valor de dano invalido.");
+            throw dano_invalido("valor negativo (" + std::to_string(amount) + ")");
         }
         hp_ -= amount;
         if (hp_ < 0) hp_ = 0;
@@ -59,7 +81,8 @@ public:
 
     void consume(int quantity) {
         if (count_ < quantity) {
-            throw std::runtime_error("Municao insuficiente.");
+            throw municao_insuficiente("restam " + std::to_string(count_) +
+                                        ", pedido " + std::to_string(quantity));
         }
         count_ -= quantity;
     }
@@ -104,6 +127,16 @@ public:
 
 // counted<Derived> - CRTP: adiciona contagem de instancias sem vtable (Questao 1-B)
 // Cada classe que "herda" counted<SiMesma> ganha seu proprio contador estatico.
+// buscar_piloto_por_callsign - optional em busca que pode falhar (Questao 2-B)
+std::optional<Pilot> buscar_piloto_por_callsign(const registry<Pilot>& reg, const std::string& callsign) {
+    for (std::size_t i = 0; i < reg.size(); ++i) {
+        if (reg.at(i).get_callsign() == callsign) {
+            return reg.at(i); // achou
+        }
+    }
+    return std::nullopt; // nao achou
+}
+
 template <typename Derived>
 class counted {
 private:
@@ -239,6 +272,19 @@ float soma_poder_de_fogo(const std::vector<T>& v) {
 // std::vector<Pilot> pilotos_teste;
 // soma_poder_de_fogo(pilotos_teste); // ERRO: Pilot nao tem calculate_firepower()
 
+// resultado_busca - variant: sucesso (ponteiro p/ Aircraft) OU erro (mensagem) (Questao 2-C)
+using resultado_busca = std::variant<Aircraft*, std::string>;
+
+resultado_busca buscar_aeronave_por_modelo(const std::vector<std::unique_ptr<Aircraft>>& frota,
+                                            const std::string& modelo) {
+    for (const auto& aeronave : frota) {
+        if (aeronave->get_model() == modelo) {
+            return aeronave.get(); // sucesso: ponteiro nao-dono (nao deleta)
+        }
+    }
+    return std::string("aeronave nao encontrada: " + modelo); // erro: mensagem
+}
+
 // Salva relatório em arquivo
 void salvar_relatorio(const std::string& filename, const std::vector<std::unique_ptr<Aircraft>>& frota, const Pilot& pilot) {
     std::ofstream arquivo(filename);
@@ -322,6 +368,45 @@ int main() {
         for (const auto& nome : modelos_com_municao) {
             std::cout << " - " << nome << "\n";
         }
+
+        std::cout << "\n--- QUESTAO 2(D): excecao (base) + optional (2 casos) + variant ---\n";
+
+        // (D-1) try/catch capturando a excecao ESPECIFICA pela classe BASE
+        try {
+            std::cout << "[TESTE] Tentando disparar mais tiros do que a municao restante...\n";
+            frota.front()->fire_weapon(999); // deve lancar municao_insuficiente
+        }
+        catch (const erro_dominio& e) { // captura pela BASE, nao pela especifica
+            std::cerr << "[ERRO_DOMINIO] " << e.what() << "\n";
+        }
+
+        // (D-2) optional nos dois casos: achou e nao achou
+        auto piloto_achado = buscar_piloto_por_callsign(registro_pilotos, "Ghost");
+        if (piloto_achado.has_value()) {
+            std::cout << "[OPTIONAL] Piloto encontrado: " << piloto_achado->get_callsign() << "\n";
+        }
+
+        auto piloto_nao_achado = buscar_piloto_por_callsign(registro_pilotos, "Maverick");
+        if (!piloto_nao_achado.has_value()) {
+            std::cout << "[OPTIONAL] Piloto 'Maverick' nao encontrado (nullopt), como esperado\n";
+        }
+
+        // (D-3) variant tratado com std::visit
+        resultado_busca busca_ok = buscar_aeronave_por_modelo(frota, "F-22 Raptor");
+        resultado_busca busca_falha = buscar_aeronave_por_modelo(frota, "Su-57");
+
+        auto trata_resultado = [](const resultado_busca& r) {
+            std::visit([](const auto& valor) {
+                using T = std::decay_t<decltype(valor)>;
+                if constexpr (std::is_same_v<T, Aircraft*>) {
+                    std::cout << "[VARIANT] Encontrado: " << valor->get_model() << "\n";
+                } else {
+                    std::cout << "[VARIANT] Erro: " << valor << "\n";
+                }
+            }, r);
+        };
+        trata_resultado(busca_ok);
+        trata_resultado(busca_falha);
 
         // Simulando combate
         try {
