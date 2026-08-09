@@ -54,10 +54,10 @@ RM = /usr/bin/cmake -E rm -f
 EQUALS = =
 
 # The top-level source directory on which CMake was run.
-CMAKE_SOURCE_DIR = "/home/mf/Documentos/atividades cdia/POO_atividade_28_05_26/meu-projeto"
+CMAKE_SOURCE_DIR = "/home/mf/Documentos/CDIA 2026.1/POO_atividade_28_05_26/meu-projeto"
 
 # The top-level build directory on which CMake was run.
-CMAKE_BINARY_DIR = "/home/mf/Documentos/atividades cdia/POO_atividade_28_05_26/meu-projeto/build"
+CMAKE_BINARY_DIR = "/home/mf/Documentos/CDIA 2026.1/POO_atividade_28_05_26/meu-projeto/build"
 
 #=============================================================================
 # Directory level rules for the build root directory
@@ -81,14 +81,14 @@ clean: CMakeFiles/meu_exe.dir/clean
 CMakeFiles/meu_exe.dir/all:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/meu_exe.dir/build.make CMakeFiles/meu_exe.dir/depend
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/meu_exe.dir/build.make CMakeFiles/meu_exe.dir/build
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --progress-dir="/home/mf/Documentos/atividades cdia/POO_atividade_28_05_26/meu-projeto/build/CMakeFiles" --progress-num=1,2 "Built target meu_exe"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --progress-dir="/home/mf/Documentos/CDIA 2026.1/POO_atividade_28_05_26/meu-projeto/build/CMakeFiles" --progress-num=1,2 "Built target meu_exe"
 .PHONY : CMakeFiles/meu_exe.dir/all
 
 # Build rule for subdir invocation for target.
 CMakeFiles/meu_exe.dir/rule: cmake_check_build_system
-	$(CMAKE_COMMAND) -E cmake_progress_start "/home/mf/Documentos/atividades cdia/POO_atividade_28_05_26/meu-projeto/build/CMakeFiles" 2
+	$(CMAKE_COMMAND) -E cmake_progress_start "/home/mf/Documentos/CDIA 2026.1/POO_atividade_28_05_26/meu-projeto/build/CMakeFiles" 2
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 CMakeFiles/meu_exe.dir/all
-	$(CMAKE_COMMAND) -E cmake_progress_start "/home/mf/Documentos/atividades cdia/POO_atividade_28_05_26/meu-projeto/build/CMakeFiles" 0
+	$(CMAKE_COMMAND) -E cmake_progress_start "/home/mf/Documentos/CDIA 2026.1/POO_atividade_28_05_26/meu-projeto/build/CMakeFiles" 0
 .PHONY : CMakeFiles/meu_exe.dir/rule
 
 # Convenience name for target.
