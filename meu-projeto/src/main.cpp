@@ -7,6 +7,13 @@
 #include <ranges>
 #include <optional>
 #include <variant>
+#include <algorithm>
+#include <numeric>
+#include <map>
+#include <unordered_set>
+#include <thread>
+#include <mutex>
+#include <future>
 
 // erro_dominio - excecao BASE do dominio, herda de std::runtime_error (Questao 2-A)
 class erro_dominio : public std::runtime_error {
@@ -407,6 +414,76 @@ int main() {
         };
         trata_resultado(busca_ok);
         trata_resultado(busca_falha);
+
+        std::cout << "\n--- QUESTAO 3(A): Containers STL (map + unordered_set) ---\n";
+
+        // std::map: indice ORDENADO por chave (nome do modelo -> ponteiro da aeronave)
+        std::map<std::string, Aircraft*> indice_por_modelo;
+        for (const auto& aeronave : frota) {
+            indice_por_modelo[aeronave->get_model()] = aeronave.get();
+        }
+        std::cout << "Indice por modelo (ordem alfabetica automatica):\n";
+        for (const auto& [modelo, ptr] : indice_por_modelo) {
+            std::cout << " - " << modelo << "\n";
+        }
+
+        // std::unordered_set: garante armas UNICAS, busca O(1)
+        std::unordered_set<std::string> armas_unicas;
+        for (const auto& aeronave : frota) {
+            armas_unicas.insert(aeronave->get_model()); // reutilizando modelo como exemplo de unicidade
+        }
+        std::cout << "Total de modelos unicos na frota: " << armas_unicas.size() << "\n";
+
+        std::cout << "\n--- QUESTAO 3(B): Algoritmos STL + lambda com captura ---\n";
+
+        // Vetor de ponteiros nao-donos, construido com std::transform (algoritmo 1)
+        std::vector<Aircraft*> ponteiros_frota;
+        std::transform(frota.begin(), frota.end(), std::back_inserter(ponteiros_frota),
+                        [](const auto& aeronave) { return aeronave.get(); });
+
+        // std::sort com comparador (algoritmo 2): ordena por poder de fogo, do maior pro menor
+        std::sort(ponteiros_frota.begin(), ponteiros_frota.end(),
+                  [](Aircraft* a, Aircraft* b) { return a->calculate_firepower() > b->calculate_firepower(); });
+
+        std::cout << "Frota ordenada por poder de fogo (desc):\n";
+        for (Aircraft* a : ponteiros_frota) {
+            std::cout << " - " << a->get_model() << " (" << a->calculate_firepower() << ")\n";
+        }
+
+        // std::count_if com LAMBDA COM CAPTURA (algoritmo 3)
+        int municao_minima = 3;
+        auto qtd_com_municao_alta = std::count_if(
+            ponteiros_frota.begin(), ponteiros_frota.end(),
+            [municao_minima](Aircraft* a) { return a->get_ammo_count() >= municao_minima; }); // captura por valor
+        std::cout << "Aeronaves com municao >= " << municao_minima << ": " << qtd_com_municao_alta << "\n";
+
+        // std::accumulate (algoritmo 4): soma total do poder de fogo
+        double soma_poder_total = std::accumulate(
+            ponteiros_frota.begin(), ponteiros_frota.end(), 0.0,
+            [](double acc, Aircraft* a) { return acc + a->calculate_firepower(); });
+        std::cout << "Soma total de poder de fogo: " << soma_poder_total << "\n";
+
+        std::cout << "\n--- QUESTAO 3(C)(D): Paralelizacao com std::async + mutex ---\n";
+
+        double soma_paralela = 0.0;
+        std::mutex mtx_soma;
+        std::vector<std::future<void>> tarefas;
+
+        for (Aircraft* aeronave : ponteiros_frota) {
+            // cada tarefa e independente: so le os dados da PROPRIA aeronave
+            tarefas.push_back(std::async(std::launch::async, [aeronave, &soma_paralela, &mtx_soma] {
+                double parcial = aeronave->calculate_firepower(); // calculo independente
+                std::lock_guard<std::mutex> lock(mtx_soma);       // regiao critica protegida
+                soma_paralela += parcial;                          // escrita no estado compartilhado
+            }));
+        }
+
+        for (auto& tarefa : tarefas) {
+            tarefa.get(); // aguarda (equivalente a join) e propaga excecoes, se houver
+        }
+
+        std::cout << "Soma de poder de fogo (calculada em paralelo): " << soma_paralela << "\n";
+        std::cout << "Soma serial (Q3-B) para comparacao: " << soma_poder_total << "\n";
 
         // Simulando combate
         try {
