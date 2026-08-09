@@ -101,6 +101,20 @@ public:
     }
 };
  
+// counted<Derived> - CRTP: adiciona contagem de instancias sem vtable (Questao 1-B)
+// Cada classe que "herda" counted<SiMesma> ganha seu proprio contador estatico.
+template <typename Derived>
+class counted {
+private:
+    static inline int count_ = 0;
+ 
+public:
+    counted() { ++count_; }
+    ~counted() { --count_; }
+ 
+    static int alive() { return count_; }
+};
+ 
 // Classe base abstrata
 class Aircraft {
 protected:
@@ -147,7 +161,7 @@ public:
 };
  
 // FighterJet - caça padrão
-class FighterJet : public Aircraft {
+class FighterJet : public Aircraft, public counted<FighterJet> {
 public:
     FighterJet(std::string model, int speed, int evasiveness, int initial_ammo, std::string weapon_name, int weapon_dmg)
         : Aircraft(model, speed, evasiveness, initial_ammo, weapon_name, weapon_dmg) {
@@ -165,7 +179,7 @@ public:
 };
  
 // Interceptor - veloz e pesado
-class Interceptor : public Aircraft {
+class Interceptor : public Aircraft, public counted<Interceptor> {
 public:
     Interceptor(std::string model, int speed, int evasiveness, int initial_ammo, std::string weapon_name, int weapon_dmg)
         : Aircraft(model, speed, evasiveness, initial_ammo, weapon_name, weapon_dmg) {
@@ -248,6 +262,10 @@ int main() {
             aeronave->assign_pilot(player_pilot);
         }
  
+        std::cout << "\n--- QUESTAO 1(B): CRTP - contagem sem vtable ---\n";
+        std::cout << "FighterJet vivos: " << FighterJet::alive() << "\n";
+        std::cout << "Interceptor vivos: " << Interceptor::alive() << "\n";
+ 
         // Simulando combate
         try {
             std::cout << "[SIMULACAO] Disparando armas do F-22...\n";
@@ -269,6 +287,8 @@ int main() {
     } 
  
     std::cout << "\n[FORA DO ESCOPO]\n";
+    std::cout << "FighterJet vivos apos escopo: " << FighterJet::alive() << "\n";
+    std::cout << "Interceptor vivos apos escopo: " << Interceptor::alive() << "\n";
     delete player_pilot;
  
     std::cout << "\n--- FIM DA EXECUCAO ---\n";
