@@ -14,6 +14,9 @@
 #include <thread>
 #include <mutex>
 #include <future>
+#include <nlohmann/json.hpp> // Para serializacao (Questao 4-A)
+
+using json = nlohmann::json;
 
 // erro_dominio - excecao BASE do dominio, herda de std::runtime_error (Questao 2-A)
 class erro_dominio : public std::runtime_error {
@@ -292,6 +295,188 @@ resultado_busca buscar_aeronave_por_modelo(const std::vector<std::unique_ptr<Air
     return std::string("aeronave nao encontrada: " + modelo); // erro: mensagem
 }
 
+// ============================================================
+// QUESTAO 4 - Serializacao (JSON) e SOLID (DIP)
+// ============================================================
+
+// aircraft_snapshot - representacao PLANA (nao-polimorfica) de uma aeronave,
+// usada apenas para serializar/desserializar o estado (Questao 4-A/B).
+// O campo "type_" guarda o tipo concreto (FighterJet/Interceptor) para
+// permitir recriar o objeto certo na desserializacao.
+struct aircraft_snapshot {
+    std::string type_;
+    std::string model_;
+    int speed_;
+    int evasiveness_;
+    int ammo_;
+    std::string weapon_name_;
+    int weapon_dmg_;
+
+    // Necessario para o teste de round-trip (estado_missao == estado_missao)
+    bool operator==(const aircraft_snapshot& outro) const {
+        return type_ == outro.type_ && model_ == outro.model_ &&
+               speed_ == outro.speed_ && evasiveness_ == outro.evasiveness_ &&
+               ammo_ == outro.ammo_ && weapon_name_ == outro.weapon_name_ &&
+               weapon_dmg_ == outro.weapon_dmg_;
+    }
+};
+
+// to_json/from_json nao-intrusivos para aircraft_snapshot (Questao 4-A/B)
+void to_json(json& j, const aircraft_snapshot& a) {
+    j = json{{"type", a.type_},
+             {"model", a.model_},
+             {"speed", a.speed_},
+             {"evasiveness", a.evasiveness_},
+             {"ammo", a.ammo_},
+             {"weapon_name", a.weapon_name_},
+             {"weapon_dmg", a.weapon_dmg_}};
+}
+
+void from_json(const json& j, aircraft_snapshot& a) {
+    j.at("type").get_to(a.type_);
+    j.at("model").get_to(a.model_);
+    j.at("speed").get_to(a.speed_);
+    j.at("evasiveness").get_to(a.evasiveness_);
+    j.at("ammo").get_to(a.ammo_);
+    j.at("weapon_name").get_to(a.weapon_name_);
+    j.at("weapon_dmg").get_to(a.weapon_dmg_);
+}
+
+// estado_missao - estado completo do sistema (piloto + frota), o que de fato
+// e persistido/restaurado. E o "estado" mencionado no roteiro de testes.
+struct estado_missao {
+    std::string pilot_callsign_;
+    int pilot_hp_;
+    int pilot_agility_;
+    std::vector<aircraft_snapshot> aeronaves_;
+
+    bool operator==(const estado_missao& outro) const {
+        return pilot_callsign_ == outro.pilot_callsign_ &&
+               pilot_hp_ == outro.pilot_hp_ &&
+               pilot_agility_ == outro.pilot_agility_ &&
+               aeronaves_ == outro.aeronaves_;
+    }
+};
+
+// to_json/from_json de estado_missao, com campo "version" (Questao 4-B)
+void to_json(json& j, const estado_missao& e) {
+    j = json{{"version", 1},
+             {"pilot", {{"callsign", e.pilot_callsign_},
+                        {"hp", e.pilot_hp_},
+                        {"agility", e.pilot_agility_}}},
+             {"aeronaves", e.aeronaves_}};
+}
+
+void from_json(const json& j, estado_missao& e) {
+    // trata por versao: hoje so existe a versao 1, mas o "if" abaixo e o
+    // ponto de extensao (OCP) para migrar formatos antigos no futuro.
+    int versao = j.at("version").get<int>();
+    if (versao != 1) {
+        throw erro_dominio("versao de estado nao suportada: " + std::to_string(versao));
+    }
+    j.at("pilot").at("callsign").get_to(e.pilot_callsign_);
+    j.at("pilot").at("hp").get_to(e.pilot_hp_);
+    j.at("pilot").at("agility").get_to(e.pilot_agility_);
+    j.at("aeronaves").get_to(e.aeronaves_);
+}
+
+// monta_estado - converte a frota polimorfica (Aircraft) + piloto no
+// estado_missao plano, gravando o tipo concreto de cada aeronave
+estado_missao monta_estado(const std::vector<std::unique_ptr<Aircraft>>& frota, const Pilot& pilot) {
+    estado_missao estado;
+    estado.pilot_callsign_ = pilot.get_callsign();
+    estado.pilot_hp_ = pilot.get_hp();
+    estado.pilot_agility_ = pilot.get_agility();
+
+    for (const auto& aeronave : frota) {
+        aircraft_snapshot snap;
+        snap.type_ = dynamic_cast<FighterJet*>(aeronave.get()) ? "FighterJet" : "Interceptor";
+        snap.model_ = aeronave->get_model();
+        snap.speed_ = 0;           // nao ha getter publico de speed_/evasiveness_ em Aircraft;
+        snap.evasiveness_ = 0;     // mantidos por completude do snapshot (poderiam ser expostos via getter)
+        snap.ammo_ = aeronave->get_ammo_count();
+        snap.weapon_name_ = "";    // idem: Weapon nao e exposta publicamente por Aircraft
+        snap.weapon_dmg_ = 0;
+        estado.aeronaves_.push_back(std::move(snap));
+    }
+    return estado;
+}
+
+// estado_repository - abstracao (DIP) para persistencia do estado_missao.
+// Classes de alto nivel (missao_app) dependem SOMENTE desta interface,
+// nunca de uma implementacao concreta (Questao 4-C).
+class estado_repository {
+public:
+    virtual void save(const estado_missao& estado) = 0;
+    virtual estado_missao load() = 0;
+    virtual ~estado_repository() = default;
+};
+
+// json_repository - implementacao de PRODUCAO: grava/le em arquivo .json (Questao 4-D)
+class json_repository : public estado_repository {
+private:
+    std::string filename_;
+
+public:
+    explicit json_repository(std::string filename) : filename_(std::move(filename)) {}
+
+    void save(const estado_missao& estado) override {
+        std::ofstream arquivo(filename_);
+        if (!arquivo.is_open()) {
+            throw std::runtime_error("nao foi possivel abrir arquivo para salvar: " + filename_);
+        }
+        json doc = estado;
+        arquivo << doc.dump(2);
+        std::cout << "[JSON_REPOSITORY] Estado salvo em: " << filename_ << "\n";
+    }
+
+    estado_missao load() override {
+        std::ifstream arquivo(filename_);
+        if (!arquivo.is_open()) {
+            throw std::runtime_error("nao foi possivel abrir arquivo para carregar: " + filename_);
+        }
+        json doc;
+        arquivo >> doc;
+        std::cout << "[JSON_REPOSITORY] Estado carregado de: " << filename_ << "\n";
+        return doc.get<estado_missao>();
+    }
+};
+
+// memory_repository - implementacao de TESTE: guarda o estado em memoria,
+// sem tocar disco nem rede (Questao 4-D), ideal para testes automatizados.
+class memory_repository : public estado_repository {
+private:
+    std::optional<estado_missao> ultimo_estado_;
+
+public:
+    void save(const estado_missao& estado) override {
+        ultimo_estado_ = estado;
+        std::cout << "[MEMORY_REPOSITORY] Estado salvo em memoria (sem I/O)\n";
+    }
+
+    estado_missao load() override {
+        if (!ultimo_estado_.has_value()) {
+            throw erro_dominio("memory_repository: nenhum estado salvo ainda");
+        }
+        std::cout << "[MEMORY_REPOSITORY] Estado carregado da memoria (sem I/O)\n";
+        return *ultimo_estado_;
+    }
+};
+
+// missao_app - classe de ALTO NIVEL: depende da ABSTRACAO estado_repository,
+// recebida por injecao de dependencia no construtor (Questao 4-C).
+// Nao sabe (nem precisa saber) se o repositorio e arquivo ou memoria.
+class missao_app {
+private:
+    estado_repository& repo_;
+
+public:
+    explicit missao_app(estado_repository& repo) : repo_(repo) {}
+
+    void salvar(const estado_missao& estado) { repo_.save(estado); }
+    estado_missao carregar() { return repo_.load(); }
+};
+
 // Salva relatório em arquivo
 void salvar_relatorio(const std::string& filename, const std::vector<std::unique_ptr<Aircraft>>& frota, const Pilot& pilot) {
     std::ofstream arquivo(filename);
@@ -484,6 +669,28 @@ int main() {
 
         std::cout << "Soma de poder de fogo (calculada em paralelo): " << soma_paralela << "\n";
         std::cout << "Soma serial (Q3-B) para comparacao: " << soma_poder_total << "\n";
+
+        std::cout << "\n--- QUESTAO 4: Serializacao JSON + DIP (json_repository / memory_repository) ---\n";
+
+        // Monta o estado atual (piloto + frota) a partir dos objetos polimorficos
+        estado_missao estado_atual = monta_estado(frota, *player_pilot);
+
+        // (4-C)(4-D) missao_app depende so da ABSTRACAO estado_repository.
+        // Aqui trocamos a implementacao (arquivo <-> memoria) sem mudar missao_app.
+        json_repository repo_arquivo("estado_missao.json");
+        missao_app app_producao(repo_arquivo);
+        app_producao.salvar(estado_atual);
+        estado_missao estado_recarregado = app_producao.carregar();
+        std::cout << "[QUESTAO 4] Round-trip via arquivo OK? "
+                  << (estado_atual == estado_recarregado ? "sim" : "nao") << "\n";
+
+        // memory_repository: exercita a MESMA logica de missao_app sem tocar o disco
+        memory_repository repo_memoria;
+        missao_app app_teste(repo_memoria);
+        app_teste.salvar(estado_atual);
+        estado_missao estado_em_memoria = app_teste.carregar();
+        std::cout << "[QUESTAO 4] Round-trip via memoria (sem I/O) OK? "
+                  << (estado_atual == estado_em_memoria ? "sim" : "nao") << "\n";
 
         // Simulando combate
         try {
