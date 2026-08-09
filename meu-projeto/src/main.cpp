@@ -201,6 +201,14 @@ public:
     }
 };
  
+#include <concepts>
+ 
+// possui_poder_de_fogo - concept que restringe tipos com calculate_firepower() (Questao 1-C)
+template <typename T>
+concept possui_poder_de_fogo = requires (const T& t) {
+    { t.calculate_firepower() } -> std::convertible_to<float>;
+};
+ 
 // Salva relatório em arquivo
 void salvar_relatorio(const std::string& filename, const std::vector<std::unique_ptr<Aircraft>>& frota, const Pilot& pilot) {
     std::ofstream arquivo(filename);
