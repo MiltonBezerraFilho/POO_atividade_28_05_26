@@ -134,6 +134,13 @@ public:
           weapon_(std::make_unique<Weapon>(weapon_name, weapon_dmg)),
           pilot_(nullptr) {}
  
+    // Regra dos 5: unique_ptr nao pode ser copiado, entao proibimos copia
+    // e habilitamos movimentacao explicitamente (necessario p/ std::vector<FighterJet>)
+    Aircraft(const Aircraft&) = delete;
+    Aircraft& operator=(const Aircraft&) = delete;
+    Aircraft(Aircraft&&) = default;
+    Aircraft& operator=(Aircraft&&) = default;
+ 
     virtual ~Aircraft() {
         std::cout << "[AIRCRAFT] Destruido: " << model_ << "\n";
     }
@@ -168,6 +175,9 @@ public:
         std::cout << "[FIGHTERJET] Criado: " << model_ << "\n";
     }
  
+    FighterJet(FighterJet&&) = default;
+    FighterJet& operator=(FighterJet&&) = default;
+ 
     ~FighterJet() override {
         std::cout << "[FIGHTERJET] Destruido\n";
     }
@@ -185,6 +195,9 @@ public:
         : Aircraft(model, speed, evasiveness, initial_ammo, weapon_name, weapon_dmg) {
         std::cout << "[INTERCEPTOR] Criado: " << model_ << "\n";
     }
+ 
+    Interceptor(Interceptor&&) = default;
+    Interceptor& operator=(Interceptor&&) = default;
  
     ~Interceptor() override {
         std::cout << "[INTERCEPTOR] Destruido\n";
@@ -208,6 +221,22 @@ template <typename T>
 concept possui_poder_de_fogo = requires (const T& t) {
     { t.calculate_firepower() } -> std::convertible_to<float>;
 };
+ 
+// soma_poder_de_fogo - usa o concept na assinatura via template <possui_poder_de_fogo T> (Questao 1-D)
+template <possui_poder_de_fogo T>
+float soma_poder_de_fogo(const std::vector<T>& v) {
+    float total = 0.0f;
+    for (const auto& item : v) {
+        total += item.calculate_firepower();
+    }
+    return total;
+}
+ 
+// TESTE MANUAL (Questao 1-D): descomentar as 2 linhas abaixo prova que o concept barra
+// tipos invalidos com erro CLARO de compilacao, citando "possui_poder_de_fogo" e
+// "t.calculate_firepower() is invalid" - nao um erro obscuro de template.
+// std::vector<Pilot> pilotos_teste;
+// soma_poder_de_fogo(pilotos_teste); // ERRO: Pilot nao tem calculate_firepower()
  
 // Salva relatório em arquivo
 void salvar_relatorio(const std::string& filename, const std::vector<std::unique_ptr<Aircraft>>& frota, const Pilot& pilot) {
@@ -273,6 +302,13 @@ int main() {
         std::cout << "\n--- QUESTAO 1(B): CRTP - contagem sem vtable ---\n";
         std::cout << "FighterJet vivos: " << FighterJet::alive() << "\n";
         std::cout << "Interceptor vivos: " << Interceptor::alive() << "\n";
+ 
+        std::cout << "\n--- QUESTAO 1(D): Concept aplicado (possui_poder_de_fogo) ---\n";
+        std::vector<FighterJet> esquadrao_teste;
+        esquadrao_teste.emplace_back("F-16 Fighting Falcon", 70, 60, 3, "AIM-9", 30);
+        esquadrao_teste.back().assign_pilot(player_pilot);
+        std::cout << "Soma de poder de fogo (FighterJet): "
+                  << soma_poder_de_fogo(esquadrao_teste) << "\n";
  
         // Simulando combate
         try {
