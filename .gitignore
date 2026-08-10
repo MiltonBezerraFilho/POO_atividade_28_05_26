@@ -1,0 +1,6 @@
+build/
+estado_missao.json
+estado_gui.json
+log_combate.txt
+*.o
+*.out
