@@ -1,0 +1,46 @@
+{
+	"sources" : 
+	[
+		{
+			"file" : "/home/mf/Documentos/CDIA 2026.1/POO_atividade_28_05_26/meu-projeto/build/_deps/json-subbuild/CMakeFiles/json-populate"
+		},
+		{
+			"file" : "/home/mf/Documentos/CDIA 2026.1/POO_atividade_28_05_26/meu-projeto/build/_deps/json-subbuild/CMakeFiles/json-populate.rule"
+		},
+		{
+			"file" : "/home/mf/Documentos/CDIA 2026.1/POO_atividade_28_05_26/meu-projeto/build/_deps/json-subbuild/CMakeFiles/json-populate-complete.rule"
+		},
+		{
+			"file" : "/home/mf/Documentos/CDIA 2026.1/POO_atividade_28_05_26/meu-projeto/build/_deps/json-subbuild/json-populate-prefix/src/json-populate-stamp/json-populate-build.rule"
+		},
+		{
+			"file" : "/home/mf/Documentos/CDIA 2026.1/POO_atividade_28_05_26/meu-projeto/build/_deps/json-subbuild/json-populate-prefix/src/json-populate-stamp/json-populate-configure.rule"
+		},
+		{
+			"file" : "/home/mf/Documentos/CDIA 2026.1/POO_atividade_28_05_26/meu-projeto/build/_deps/json-subbuild/json-populate-prefix/src/json-populate-stamp/json-populate-download.rule"
+		},
+		{
+			"file" : "/home/mf/Documentos/CDIA 2026.1/POO_atividade_28_05_26/meu-projeto/build/_deps/json-subbuild/json-populate-prefix/src/json-populate-stamp/json-populate-install.rule"
+		},
+		{
+			"file" : "/home/mf/Documentos/CDIA 2026.1/POO_atividade_28_05_26/meu-projeto/build/_deps/json-subbuild/json-populate-prefix/src/json-populate-stamp/json-populate-mkdir.rule"
+		},
+		{
+			"file" : "/home/mf/Documentos/CDIA 2026.1/POO_atividade_28_05_26/meu-projeto/build/_deps/json-subbuild/json-populate-prefix/src/json-populate-stamp/json-populate-patch.rule"
+		},
+		{
+			"file" : "/home/mf/Documentos/CDIA 2026.1/POO_atividade_28_05_26/meu-projeto/build/_deps/json-subbuild/json-populate-prefix/src/json-populate-stamp/json-populate-test.rule"
+		},
+		{
+			"file" : "/home/mf/Documentos/CDIA 2026.1/POO_atividade_28_05_26/meu-projeto/build/_deps/json-subbuild/json-populate-prefix/src/json-populate-stamp/json-populate-update.rule"
+		}
+	],
+	"target" : 
+	{
+		"labels" : 
+		[
+			"json-populate"
+		],
+		"name" : "json-populate"
+	}
+}

@@ -1,0 +1,14 @@
+# Target labels
+ json-populate
+# Source files and their labels
+/home/mf/Documentos/CDIA 2026.1/POO_atividade_28_05_26/meu-projeto/build/_deps/json-subbuild/CMakeFiles/json-populate
+/home/mf/Documentos/CDIA 2026.1/POO_atividade_28_05_26/meu-projeto/build/_deps/json-subbuild/CMakeFiles/json-populate.rule
+/home/mf/Documentos/CDIA 2026.1/POO_atividade_28_05_26/meu-projeto/build/_deps/json-subbuild/CMakeFiles/json-populate-complete.rule
+/home/mf/Documentos/CDIA 2026.1/POO_atividade_28_05_26/meu-projeto/build/_deps/json-subbuild/json-populate-prefix/src/json-populate-stamp/json-populate-build.rule
+/home/mf/Documentos/CDIA 2026.1/POO_atividade_28_05_26/meu-projeto/build/_deps/json-subbuild/json-populate-prefix/src/json-populate-stamp/json-populate-configure.rule
+/home/mf/Documentos/CDIA 2026.1/POO_atividade_28_05_26/meu-projeto/build/_deps/json-subbuild/json-populate-prefix/src/json-populate-stamp/json-populate-download.rule
+/home/mf/Documentos/CDIA 2026.1/POO_atividade_28_05_26/meu-projeto/build/_deps/json-subbuild/json-populate-prefix/src/json-populate-stamp/json-populate-install.rule
+/home/mf/Documentos/CDIA 2026.1/POO_atividade_28_05_26/meu-projeto/build/_deps/json-subbuild/json-populate-prefix/src/json-populate-stamp/json-populate-mkdir.rule
+/home/mf/Documentos/CDIA 2026.1/POO_atividade_28_05_26/meu-projeto/build/_deps/json-subbuild/json-populate-prefix/src/json-populate-stamp/json-populate-patch.rule
+/home/mf/Documentos/CDIA 2026.1/POO_atividade_28_05_26/meu-projeto/build/_deps/json-subbuild/json-populate-prefix/src/json-populate-stamp/json-populate-test.rule
+/home/mf/Documentos/CDIA 2026.1/POO_atividade_28_05_26/meu-projeto/build/_deps/json-subbuild/json-populate-prefix/src/json-populate-stamp/json-populate-update.rule

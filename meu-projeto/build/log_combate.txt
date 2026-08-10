@@ -1,0 +1,17 @@
+----------------------------------------
+        Relatorio de Missao
+----------------------------------------
+
+Dados do piloto:
+[PILOT] Callsign: Wormwood | HP: 80 | Agilidade: 15
+
+Frota:
+- Modelo: F-22 Raptor
+  Poder de fogo: 163.5
+  Municao restante: 2
+
+- Modelo: MiG-31 Foxhound
+  Poder de fogo: 350
+  Municao restante: 6
+
+----------------------------------------

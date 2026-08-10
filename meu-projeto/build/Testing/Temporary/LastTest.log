@@ -1,0 +1,168 @@
+Start testing: Aug 10 18:01 -03
+----------------------------------------------------------
+1/7 Testing: registry<T> guarda e recupera itens de qualquer tipo
+1/7 Test: registry<T> guarda e recupera itens de qualquer tipo
+Command: "/home/mf/Documentos/CDIA 2026.1/POO_atividade_28_05_26/meu-projeto/build/testes" "registry<T> guarda e recupera itens de qualquer tipo"
+Directory: /home/mf/Documentos/CDIA 2026.1/POO_atividade_28_05_26/meu-projeto/build
+"registry<T> guarda e recupera itens de qualquer tipo" start time: Aug 10 18:01 -03
+Output:
+----------------------------------------------------------
+Filters: "registry<T> guarda e recupera itens de qualquer tipo"
+Randomness seeded to: 913129929
+===============================================================================
+All tests passed (3 assertions in 1 test case)
+
+<end of output>
+Test time =   0.03 sec
+----------------------------------------------------------
+Test Passed.
+"registry<T> guarda e recupera itens de qualquer tipo" end time: Aug 10 18:01 -03
+"registry<T> guarda e recupera itens de qualquer tipo" time elapsed: 00:00:00
+----------------------------------------------------------
+
+2/7 Testing: soma_poder_de_fogo restrito pelo concept possui_poder_de_fogo
+2/7 Test: soma_poder_de_fogo restrito pelo concept possui_poder_de_fogo
+Command: "/home/mf/Documentos/CDIA 2026.1/POO_atividade_28_05_26/meu-projeto/build/testes" "soma_poder_de_fogo restrito pelo concept possui_poder_de_fogo"
+Directory: /home/mf/Documentos/CDIA 2026.1/POO_atividade_28_05_26/meu-projeto/build
+"soma_poder_de_fogo restrito pelo concept possui_poder_de_fogo" start time: Aug 10 18:01 -03
+Output:
+----------------------------------------------------------
+Filters: "soma_poder_de_fogo restrito pelo concept possui_poder_de_fogo"
+Randomness seeded to: 3239467791
+[PILOT] Objeto criado: Ghost
+[FIGHTERJET] Criado: F-16 Fighting Falcon
+[FIGHTERJET] Destruido
+[AIRCRAFT] Destruido: F-16 Fighting Falcon
+[WEAPON] Objeto destruido: AIM-9
+[AMMUNITION] Objeto destruido
+[PILOT] Objeto destruido: Ghost
+===============================================================================
+All tests passed (1 assertion in 1 test case)
+
+<end of output>
+Test time =   0.03 sec
+----------------------------------------------------------
+Test Passed.
+"soma_poder_de_fogo restrito pelo concept possui_poder_de_fogo" end time: Aug 10 18:01 -03
+"soma_poder_de_fogo restrito pelo concept possui_poder_de_fogo" time elapsed: 00:00:00
+----------------------------------------------------------
+
+3/7 Testing: excecao do dominio: municao_insuficiente e capturada pela base erro_dominio
+3/7 Test: excecao do dominio: municao_insuficiente e capturada pela base erro_dominio
+Command: "/home/mf/Documentos/CDIA 2026.1/POO_atividade_28_05_26/meu-projeto/build/testes" "excecao do dominio: municao_insuficiente e capturada pela base erro_dominio"
+Directory: /home/mf/Documentos/CDIA 2026.1/POO_atividade_28_05_26/meu-projeto/build
+"excecao do dominio: municao_insuficiente e capturada pela base erro_dominio" start time: Aug 10 18:01 -03
+Output:
+----------------------------------------------------------
+Filters: "excecao do dominio: municao_insuficiente e capturada pela base erro_dominio"
+Randomness seeded to: 1001768895
+[FIGHTERJET] Criado: F-22 Raptor
+[AIRCRAFT] Disparando 999 tiro(s)...
+[FIGHTERJET] Destruido
+[AIRCRAFT] Destruido: F-22 Raptor
+[WEAPON] Objeto destruido: AIM-120
+[AMMUNITION] Objeto destruido
+===============================================================================
+All tests passed (1 assertion in 1 test case)
+
+<end of output>
+Test time =   0.03 sec
+----------------------------------------------------------
+Test Passed.
+"excecao do dominio: municao_insuficiente e capturada pela base erro_dominio" end time: Aug 10 18:01 -03
+"excecao do dominio: municao_insuficiente e capturada pela base erro_dominio" time elapsed: 00:00:00
+----------------------------------------------------------
+
+4/7 Testing: busca com optional: achou e nao achou
+4/7 Test: busca com optional: achou e nao achou
+Command: "/home/mf/Documentos/CDIA 2026.1/POO_atividade_28_05_26/meu-projeto/build/testes" "busca com optional: achou e nao achou"
+Directory: /home/mf/Documentos/CDIA 2026.1/POO_atividade_28_05_26/meu-projeto/build
+"busca com optional: achou e nao achou" start time: Aug 10 18:01 -03
+Output:
+----------------------------------------------------------
+Filters: "busca com optional: achou e nao achou"
+Randomness seeded to: 1836839387
+[PILOT] Objeto criado: Ghost
+[PILOT] Objeto destruido: Ghost
+[PILOT] Objeto criado: Falcon
+[PILOT] Objeto destruido: Ghost
+[PILOT] Objeto destruido: Falcon
+[PILOT] Objeto destruido: Ghost
+[PILOT] Objeto destruido: Ghost
+[PILOT] Objeto destruido: Falcon
+===============================================================================
+All tests passed (3 assertions in 1 test case)
+
+<end of output>
+Test time =   0.03 sec
+----------------------------------------------------------
+Test Passed.
+"busca com optional: achou e nao achou" end time: Aug 10 18:01 -03
+"busca com optional: achou e nao achou" time elapsed: 00:00:00
+----------------------------------------------------------
+
+5/7 Testing: serializacao round-trip: estado_missao == estado apos save/load
+5/7 Test: serializacao round-trip: estado_missao == estado apos save/load
+Command: "/home/mf/Documentos/CDIA 2026.1/POO_atividade_28_05_26/meu-projeto/build/testes" "serializacao round-trip: estado_missao == estado apos save/load"
+Directory: /home/mf/Documentos/CDIA 2026.1/POO_atividade_28_05_26/meu-projeto/build
+"serializacao round-trip: estado_missao == estado apos save/load" start time: Aug 10 18:01 -03
+Output:
+----------------------------------------------------------
+Filters: "serializacao round-trip: estado_missao == estado apos save/load"
+Randomness seeded to: 1578154342
+[MEMORY_REPOSITORY] Estado salvo em memoria (sem I/O)
+[MEMORY_REPOSITORY] Estado carregado da memoria (sem I/O)
+===============================================================================
+All tests passed (1 assertion in 1 test case)
+
+<end of output>
+Test time =   0.03 sec
+----------------------------------------------------------
+Test Passed.
+"serializacao round-trip: estado_missao == estado apos save/load" end time: Aug 10 18:01 -03
+"serializacao round-trip: estado_missao == estado apos save/load" time elapsed: 00:00:00
+----------------------------------------------------------
+
+6/7 Testing: DIP: missao_app funciona com memory_repository sem efeito colateral
+6/7 Test: DIP: missao_app funciona com memory_repository sem efeito colateral
+Command: "/home/mf/Documentos/CDIA 2026.1/POO_atividade_28_05_26/meu-projeto/build/testes" "DIP: missao_app funciona com memory_repository sem efeito colateral"
+Directory: /home/mf/Documentos/CDIA 2026.1/POO_atividade_28_05_26/meu-projeto/build
+"DIP: missao_app funciona com memory_repository sem efeito colateral" start time: Aug 10 18:01 -03
+Output:
+----------------------------------------------------------
+Filters: "DIP: missao_app funciona com memory_repository sem efeito colateral"
+Randomness seeded to: 1692335446
+[MEMORY_REPOSITORY] Estado salvo em memoria (sem I/O)
+[MEMORY_REPOSITORY] Estado carregado da memoria (sem I/O)
+===============================================================================
+All tests passed (3 assertions in 1 test case)
+
+<end of output>
+Test time =   0.03 sec
+----------------------------------------------------------
+Test Passed.
+"DIP: missao_app funciona com memory_repository sem efeito colateral" end time: Aug 10 18:01 -03
+"DIP: missao_app funciona com memory_repository sem efeito colateral" time elapsed: 00:00:00
+----------------------------------------------------------
+
+7/7 Testing: memory_repository lanca erro_dominio ao carregar sem ter salvo antes
+7/7 Test: memory_repository lanca erro_dominio ao carregar sem ter salvo antes
+Command: "/home/mf/Documentos/CDIA 2026.1/POO_atividade_28_05_26/meu-projeto/build/testes" "memory_repository lanca erro_dominio ao carregar sem ter salvo antes"
+Directory: /home/mf/Documentos/CDIA 2026.1/POO_atividade_28_05_26/meu-projeto/build
+"memory_repository lanca erro_dominio ao carregar sem ter salvo antes" start time: Aug 10 18:01 -03
+Output:
+----------------------------------------------------------
+Filters: "memory_repository lanca erro_dominio ao carregar sem ter salvo antes"
+Randomness seeded to: 2435854992
+===============================================================================
+All tests passed (1 assertion in 1 test case)
+
+<end of output>
+Test time =   0.03 sec
+----------------------------------------------------------
+Test Passed.
+"memory_repository lanca erro_dominio ao carregar sem ter salvo antes" end time: Aug 10 18:01 -03
+"memory_repository lanca erro_dominio ao carregar sem ter salvo antes" time elapsed: 00:00:00
+----------------------------------------------------------
+
+End testing: Aug 10 18:01 -03

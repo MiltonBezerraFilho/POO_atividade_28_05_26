@@ -1,0 +1,14 @@
+# Target labels
+ catch2-populate
+# Source files and their labels
+/home/mf/Documentos/CDIA 2026.1/POO_atividade_28_05_26/meu-projeto/build/_deps/catch2-subbuild/CMakeFiles/catch2-populate
+/home/mf/Documentos/CDIA 2026.1/POO_atividade_28_05_26/meu-projeto/build/_deps/catch2-subbuild/CMakeFiles/catch2-populate.rule
+/home/mf/Documentos/CDIA 2026.1/POO_atividade_28_05_26/meu-projeto/build/_deps/catch2-subbuild/CMakeFiles/catch2-populate-complete.rule
+/home/mf/Documentos/CDIA 2026.1/POO_atividade_28_05_26/meu-projeto/build/_deps/catch2-subbuild/catch2-populate-prefix/src/catch2-populate-stamp/catch2-populate-build.rule
+/home/mf/Documentos/CDIA 2026.1/POO_atividade_28_05_26/meu-projeto/build/_deps/catch2-subbuild/catch2-populate-prefix/src/catch2-populate-stamp/catch2-populate-configure.rule
+/home/mf/Documentos/CDIA 2026.1/POO_atividade_28_05_26/meu-projeto/build/_deps/catch2-subbuild/catch2-populate-prefix/src/catch2-populate-stamp/catch2-populate-download.rule
+/home/mf/Documentos/CDIA 2026.1/POO_atividade_28_05_26/meu-projeto/build/_deps/catch2-subbuild/catch2-populate-prefix/src/catch2-populate-stamp/catch2-populate-install.rule
+/home/mf/Documentos/CDIA 2026.1/POO_atividade_28_05_26/meu-projeto/build/_deps/catch2-subbuild/catch2-populate-prefix/src/catch2-populate-stamp/catch2-populate-mkdir.rule
+/home/mf/Documentos/CDIA 2026.1/POO_atividade_28_05_26/meu-projeto/build/_deps/catch2-subbuild/catch2-populate-prefix/src/catch2-populate-stamp/catch2-populate-patch.rule
+/home/mf/Documentos/CDIA 2026.1/POO_atividade_28_05_26/meu-projeto/build/_deps/catch2-subbuild/catch2-populate-prefix/src/catch2-populate-stamp/catch2-populate-test.rule
+/home/mf/Documentos/CDIA 2026.1/POO_atividade_28_05_26/meu-projeto/build/_deps/catch2-subbuild/catch2-populate-prefix/src/catch2-populate-stamp/catch2-populate-update.rule

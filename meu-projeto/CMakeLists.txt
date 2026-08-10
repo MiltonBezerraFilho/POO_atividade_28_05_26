@@ -21,3 +21,16 @@ FetchContent_MakeAvailable(json)
 
 add_executable(meu_exe src/main.cpp)
 target_link_libraries(meu_exe PRIVATE Threads::Threads nlohmann_json::nlohmann_json)
+
+
+FetchContent_Declare(Catch2
+    GIT_REPOSITORY https://github.com/catchorg/Catch2.git
+    GIT_TAG v3.5.2)
+FetchContent_MakeAvailable(Catch2)
+
+add_executable(testes tests/test_tp3.cpp)
+target_link_libraries(testes PRIVATE Catch2::Catch2WithMain nlohmann_json::nlohmann_json Threads::Threads)
+
+include(CTest)
+include(Catch)
+catch_discover_tests(testes)

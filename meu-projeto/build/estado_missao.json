@@ -1,0 +1,28 @@
+{
+  "aeronaves": [
+    {
+      "ammo": 4,
+      "evasiveness": 80,
+      "model": "F-22 Raptor",
+      "speed": 75,
+      "type": "FighterJet",
+      "weapon_dmg": 45,
+      "weapon_name": "AIM-120"
+    },
+    {
+      "ammo": 6,
+      "evasiveness": 15,
+      "model": "MiG-31 Foxhound",
+      "speed": 110,
+      "type": "Interceptor",
+      "weapon_dmg": 60,
+      "weapon_name": "R-37"
+    }
+  ],
+  "pilot": {
+    "agility": 15,
+    "callsign": "Wormwood",
+    "hp": 100
+  },
+  "version": 1
+}
