@@ -1,5 +1,0 @@
-if(EXISTS "/home/mf/Documentos/CDIA 2026.1/POO_atividade_28_05_26/meu-projeto/build/testes-b12d07c_tests.cmake")
-  include("/home/mf/Documentos/CDIA 2026.1/POO_atividade_28_05_26/meu-projeto/build/testes-b12d07c_tests.cmake")
-else()
-  add_test(testes_NOT_BUILT-b12d07c testes_NOT_BUILT-b12d07c)
-endif()

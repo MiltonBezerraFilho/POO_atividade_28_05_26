@@ -1,1 +1,0 @@
-/usr/bin/c++ -g -fsanitize=address,undefined CMakeFiles/meu_exe.dir/src/main.cpp.o -o meu_exe 

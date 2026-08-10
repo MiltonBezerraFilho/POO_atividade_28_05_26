@@ -1,8 +1,0 @@
-registry<T> guarda e recupera itens de qualquer tipo 1 0.0265448
-soma_poder_de_fogo restrito pelo concept possui_poder_de_fogo 1 0.0261619
-excecao do dominio: municao_insuficiente e capturada pela base erro_dominio 1 0.0275014
-busca com optional: achou e nao achou 1 0.026051
-serializacao round-trip: estado_missao == estado apos save/load 1 0.0260136
-DIP: missao_app funciona com memory_repository sem efeito colateral 1 0.0269434
-memory_repository lanca erro_dominio ao carregar sem ter salvo antes 1 0.0325613
----

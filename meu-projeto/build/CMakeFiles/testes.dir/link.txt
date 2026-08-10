@@ -1,1 +1,0 @@
-/usr/bin/c++ -g -fsanitize=address,undefined CMakeFiles/testes.dir/tests/test_tp3.cpp.o -o testes  _deps/catch2-build/src/libCatch2Maind.a _deps/catch2-build/src/libCatch2d.a 
