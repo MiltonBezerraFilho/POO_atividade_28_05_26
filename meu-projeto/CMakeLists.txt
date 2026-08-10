@@ -22,7 +22,6 @@ FetchContent_MakeAvailable(json)
 add_executable(meu_exe src/main.cpp)
 target_link_libraries(meu_exe PRIVATE Threads::Threads nlohmann_json::nlohmann_json)
 
-
 FetchContent_Declare(Catch2
     GIT_REPOSITORY https://github.com/catchorg/Catch2.git
     GIT_TAG v3.5.2)
@@ -34,3 +33,13 @@ target_link_libraries(testes PRIVATE Catch2::Catch2WithMain nlohmann_json::nlohm
 include(CTest)
 include(Catch)
 catch_discover_tests(testes)
+
+option(BUILD_GUI "Compilar a GUI Qt da Questao 6 (extra)" OFF)
+
+if(BUILD_GUI)
+    find_package(Qt6 REQUIRED COMPONENTS Widgets)
+    qt_standard_project_setup()
+
+    qt_add_executable(gui src/gui_main.cpp)
+    target_link_libraries(gui PRIVATE Qt6::Widgets nlohmann_json::nlohmann_json)
+endif()

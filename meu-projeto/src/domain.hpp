@@ -511,3 +511,28 @@ void salvar_relatorio(const std::string& filename, const std::vector<std::unique
     std::cout << "[RELATORIO] Arquivo salvo: " << filename << "\n";
 }
 
+// ============================================================
+// QUESTAO 6 - funcoes de dominio auxiliares, reutilizadas pela GUI (Qt)
+// Ficam aqui (nao na janela) porque sao LOGICA DE DOMINIO, nao GUI.
+// Marcadas "inline" pois o header pode ser incluido por mais de um
+// arquivo dentro do mesmo executavel (gui_main.cpp e janela.hpp).
+// ============================================================
+
+inline std::unique_ptr<Aircraft> criar_fighter_jet(const std::string& model, Pilot* pilot) {
+    auto aeronave = std::make_unique<FighterJet>(model, 70, 60, 4, "AIM-9", 30);
+    aeronave->assign_pilot(pilot);
+    return aeronave;
+}
+
+inline std::unique_ptr<Aircraft> criar_interceptor(const std::string& model, Pilot* pilot) {
+    auto aeronave = std::make_unique<Interceptor>(model, 110, 15, 6, "R-37", 60);
+    aeronave->assign_pilot(pilot);
+    return aeronave;
+}
+
+// calcular_poder_total - mesma logica de reducao da Questao 3-B (accumulate),
+// extraida em funcao para a GUI poder chamar sem reimplementar a regra.
+inline double calcular_poder_total(const std::vector<std::unique_ptr<Aircraft>>& frota) {
+    return std::accumulate(frota.begin(), frota.end(), 0.0,
+        [](double acc, const std::unique_ptr<Aircraft>& a) { return acc + a->calculate_firepower(); });
+}
